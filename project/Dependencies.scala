@@ -1,0 +1,26 @@
+import sbt._
+
+object Dependencies {
+
+  private lazy val akkaVersion = "2.6.14"
+  private lazy val discoveryVersion = "1.0.9"
+  private lazy val akkaHttpVersion = "10.2.3"
+  private lazy val logbackVersion = "1.2.3"
+
+  lazy val akka = "com.typesafe.akka" %% "akka-actor" % akkaVersion
+  lazy val akkaTyped = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
+  lazy val akkaSlf4j = "com.typesafe.akka" %% "akka-slf4j" % akkaVersion
+  lazy val akkaDiscovery = "com.typesafe.akka" %% "akka-discovery" % akkaVersion
+  lazy val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
+
+  lazy val akkaParsing = "com.typesafe.akka" %% "akka-parsing" % akkaHttpVersion
+  lazy val akkaHttpCore = "com.typesafe.akka" %% "akka-http-core" % akkaHttpVersion
+  lazy val akkaHttp = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
+  lazy val akkahttpSprayJson = "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion
+  lazy val akkaHttp2Support = "com.typesafe.akka" %% "akka-http2-support" % akkaHttpVersion
+
+  lazy val akkaDiscoveryKubernetes = "com.lightbend.akka.discovery" %% "akka-discovery-kubernetes-api" % discoveryVersion
+
+  lazy val logback = "ch.qos.logback" % "logback-classic" % logbackVersion
+
+}
