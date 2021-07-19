@@ -12,6 +12,7 @@ object Dependencies {
   lazy val akkaSlf4j = "com.typesafe.akka" %% "akka-slf4j" % akkaVersion
   lazy val akkaDiscovery = "com.typesafe.akka" %% "akka-discovery" % akkaVersion
   lazy val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
+  lazy val akkaTestKit = "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
 
   lazy val akkaParsing = "com.typesafe.akka" %% "akka-parsing" % akkaHttpVersion
   lazy val akkaHttpCore = "com.typesafe.akka" %% "akka-http-core" % akkaHttpVersion
@@ -22,5 +23,8 @@ object Dependencies {
   lazy val akkaDiscoveryKubernetes = "com.lightbend.akka.discovery" %% "akka-discovery-kubernetes-api" % discoveryVersion
 
   lazy val logback = "ch.qos.logback" % "logback-classic" % logbackVersion
+
+  lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.2.9" % Test
+  lazy val scalaCheck = "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0" % Test
 
 }

@@ -17,7 +17,7 @@ object PrimeGeneratorServer {
 
     val log: LoggingAdapter = system.log
 
-    val service: HttpRequest => Future[HttpResponse] = PrimeGeneratorServiceHandler(new PrimeGeneratorServiceImpl(system.log))
+    val service: HttpRequest => Future[HttpResponse] = PrimeGeneratorServiceHandler(PrimeGeneratorServiceImpl(system.log))
 
     Http().newServerAt("0.0.0.0", 8080)
       .bind(service)

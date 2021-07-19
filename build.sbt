@@ -18,7 +18,10 @@ lazy val `prime-generator` = (project in file("prime-generator"))
       akkaDiscovery,
       akkaHttp,
       akkaHttp2Support,
-      logback
+      logback,
+      scalaTest,
+      scalaCheck,
+      akkaTestKit
     )
   )
 

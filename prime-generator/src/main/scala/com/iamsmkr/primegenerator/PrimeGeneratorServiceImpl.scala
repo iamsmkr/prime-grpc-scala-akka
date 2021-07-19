@@ -18,3 +18,7 @@ class PrimeGeneratorServiceImpl(log: LoggingAdapter) extends PrimeGeneratorServi
       .map(n => GetPrimeNumbersReply(n))
   }
 }
+
+object PrimeGeneratorServiceImpl {
+  def apply(log: LoggingAdapter): PrimeGeneratorServiceImpl = new PrimeGeneratorServiceImpl(log)
+}
