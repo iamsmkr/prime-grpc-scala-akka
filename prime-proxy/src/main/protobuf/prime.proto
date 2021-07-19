@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.iamsmkr.primegenerator.grpc";
+option java_outer_classname = "PrimeProto";
+
+package prime;
+
+service PrimeGeneratorService {
+    rpc getPrimeNumbers (GetPrimeNumbersRequest) returns (stream GetPrimeNumbersReply) {}
+}
+
+message GetPrimeNumbersRequest {
+    int64 number = 1;
+}
+
+message GetPrimeNumbersReply {
+    int64 primeNumber = 1;
+}
