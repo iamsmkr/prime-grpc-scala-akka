@@ -1,8 +1,9 @@
 # prime-grpc-scala-akka
 
 ## Install Dependencies
-1. Install docker
-2. Install minikube
+1. Install sbt
+2. Install docker
+3. Install minikube/kubectl
 ```sh
 $ ./deploy/scripts/setup-minikube-for-linux.sh
 ```
