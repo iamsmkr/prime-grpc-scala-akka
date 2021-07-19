@@ -26,7 +26,7 @@ $ kubectl apply -f deploy/k8s/prime-proxy.yml
 ```
 
 ## Usage
-#### Comma-separated list
+#### Comma-separated List
 The following API returns a string of comma-separated list of prime numbers up until a given number.
 ```sh
 $ curl --header 'Host: primeservice.com' $(minikube ip)/prime/23
