@@ -25,7 +25,8 @@ class PrimeGeneratorServiceSpec extends TestKit(ActorSystem("PrimeGeneratorServe
         val results =
           Table(
             ("number", "result"),
-            (23, "2,3,5,7,11,13,17,19,23")
+            (23, "2,3,5,7,11,13,17,19,23"),
+            (1, "")
           )
 
         forAll(results) { (number, result) =>
