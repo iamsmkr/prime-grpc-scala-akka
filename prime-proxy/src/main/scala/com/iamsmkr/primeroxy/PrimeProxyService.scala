@@ -1,5 +1,6 @@
-package com.example.helloworld
+package com.iamsmkr.primeroxy
 
+import com.iamsmkr.primegenerator.grpc._
 import akka.actor.ActorSystem
 import akka.event.LoggingAdapter
 import akka.grpc.GrpcClientSettings
@@ -8,10 +9,9 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.stream._
 import akka.stream.scaladsl.Sink
-import com.iamsmkr.primegenerator.grpc.{GetPrimeNumbersRequest, PrimeGeneratorServiceClient}
 
-import scala.concurrent._
-import scala.util._
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 object PrimeProxyService {
 

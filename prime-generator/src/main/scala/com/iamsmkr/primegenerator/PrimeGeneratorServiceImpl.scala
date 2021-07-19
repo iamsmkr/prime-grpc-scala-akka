@@ -1,10 +1,10 @@
-package com.example.helloworld
+package com.iamsmkr.primegenerator
 
 import akka.NotUsed
 
 import akka.event.LoggingAdapter
 import akka.stream.scaladsl.Source
-import com.iamsmkr.primegenerator.grpc.{GetPrimeNumbersReply, GetPrimeNumbersRequest, PrimeGeneratorService}
+import com.iamsmkr.primegenerator.grpc._
 
 class PrimeGeneratorServiceImpl(log: LoggingAdapter) extends PrimeGeneratorService {
   override def getPrimeNumbers(req: GetPrimeNumbersRequest): Source[GetPrimeNumbersReply, NotUsed] = {

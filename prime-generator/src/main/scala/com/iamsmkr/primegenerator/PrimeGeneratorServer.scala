@@ -1,9 +1,9 @@
-package com.example.helloworld
+package com.iamsmkr.primegenerator
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model._
 import akka.http.scaladsl._
-import com.iamsmkr.primegenerator.grpc.PrimeGeneratorServiceHandler
+import com.iamsmkr.primegenerator.grpc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
