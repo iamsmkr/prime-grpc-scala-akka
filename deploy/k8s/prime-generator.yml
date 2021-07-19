@@ -1,0 +1,44 @@
+---
+apiVersion: "apps/v1"
+kind: Deployment
+metadata:
+  name: "prime-generator-v1-0-snapshot"
+  labels:
+    appName: prime-generator-srvc
+    appNameVersion: "prime-generator-v1-0-snapshot"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      appNameVersion: "prime-generator-v1-0-snapshot"
+  template:
+    metadata:
+      labels:
+        appName: prime-generator-srvc
+        appNameVersion: "prime-generator-v1-0-snapshot"
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: prime-generator
+          image: "prime-generator:0.1.0-SNAPSHOT"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts: []
+      volumes: []
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    appName: prime-generator-srvc
+  name: prime-generator-srvc
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    appName: prime-generator-srvc

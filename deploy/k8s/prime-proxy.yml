@@ -1,0 +1,57 @@
+---
+apiVersion: "apps/v1"
+kind: Deployment
+metadata:
+  name: "prime-proxy-v1-0-snapshot"
+  labels:
+    appName: prime-proxy-srvc
+    appNameVersion: "prime-proxy-v1-0-snapshot"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      appNameVersion: "prime-proxy-v1-0-snapshot"
+  template:
+    metadata:
+      labels:
+        appName: prime-proxy-srvc
+        appNameVersion: "prime-proxy-v1-0-snapshot"
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: prime-proxy
+          image: "prime-proxy:0.1.0-SNAPSHOT"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts: []
+      volumes: []
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    appName: prime-proxy-srvc
+  name: prime-proxy-srvc
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    appName: prime-proxy-srvc
+---
+apiVersion: "extensions/v1beta1"
+kind: Ingress
+metadata:
+  name: prime-proxy-srvc
+spec:
+  rules:
+    - host: "primeservice.com"
+      http:
+        paths:
+          - backend:
+              serviceName: prime-proxy-srvc
+              servicePort: 8080
