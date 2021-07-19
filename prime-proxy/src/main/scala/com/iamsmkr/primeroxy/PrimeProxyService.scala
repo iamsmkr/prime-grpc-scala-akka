@@ -8,10 +8,14 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.stream._
-import akka.stream.scaladsl.Sink
+import akka.stream.scaladsl._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent._
 import scala.util.{Failure, Success}
+import akka.http.scaladsl.marshalling.sse.EventStreamMarshalling._
+import akka.http.scaladsl.model.sse.ServerSentEvent
+
+import scala.concurrent.duration.DurationInt
 
 object PrimeProxyService {
 
@@ -42,6 +46,17 @@ object PrimeProxyService {
             case Failure(t) =>
               log.error(t, "Request failed")
               complete(StatusCodes.InternalServerError, t.getMessage)
+          }
+        }
+      } ~ path("prime" / Segment / "sse") { number =>
+        get {
+          log.info("prime number request")
+
+          complete {
+            client.getPrimeNumbers(GetPrimeNumbersRequest(number.toLong))
+              .map(_.primeNumber)
+              .map(n => ServerSentEvent(n.toString))
+              .keepAlive(1.second, () => ServerSentEvent.heartbeat)
           }
         }
       }
