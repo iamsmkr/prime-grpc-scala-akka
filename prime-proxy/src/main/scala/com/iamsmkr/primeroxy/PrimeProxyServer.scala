@@ -24,7 +24,7 @@ object PrimeProxyServer {
     Http().newServerAt("0.0.0.0", 8080)
       .bindFlow(primeRoutes)
       .onComplete {
-        case Success(r) => log.info("Bound: {}", r)
+        case Success(r) => log.info("Bound: {}", r.localAddress)
         case Failure(e) => log.error(e, "Failed to bind. Shutting down")
           system.terminate()
       }

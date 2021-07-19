@@ -1,35 +1,30 @@
 package com.iamsmkr.primegenerator
 
 import akka.actor.ActorSystem
+import akka.event.LoggingAdapter
 import akka.http.scaladsl.model._
 import akka.http.scaladsl._
 import com.iamsmkr.primegenerator.grpc._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent._
+import scala.util.{Failure, Success}
 
 object PrimeGeneratorServer {
 
   def main(args: Array[String]): Unit = {
-    val system: ActorSystem = ActorSystem("PrimeGeneratorServer")
-    new PrimeGeneratorServer(system).run()
-  }
-}
+    implicit val system: ActorSystem = ActorSystem("PrimeGeneratorServer")
+    implicit val ec: ExecutionContext = system.dispatcher
 
-class PrimeGeneratorServer(system: ActorSystem) {
+    val log: LoggingAdapter = system.log
 
-  def run(): Future[Http.ServerBinding] = {
-    implicit val sys: ActorSystem = system
-    implicit val ec: ExecutionContext = sys.dispatcher
+    val service: HttpRequest => Future[HttpResponse] = PrimeGeneratorServiceHandler(new PrimeGeneratorServiceImpl(system.log))
 
-    val service: HttpRequest => Future[HttpResponse] =
-      PrimeGeneratorServiceHandler(new PrimeGeneratorServiceImpl(system.log))
-
-    val bound = Http().newServerAt("0.0.0.0", 8080).bind(service)
-
-    bound.foreach { binding =>
-      sys.log.info("gRPC server bound to: {}", binding.localAddress)
-    }
-
-    bound
+    Http().newServerAt("0.0.0.0", 8080)
+      .bind(service)
+      .onComplete {
+        case Success(r) => log.info("Bound: {}", r.localAddress)
+        case Failure(e) => log.error(e, "Failed to bind. Shutting down")
+          system.terminate()
+      }
   }
 }

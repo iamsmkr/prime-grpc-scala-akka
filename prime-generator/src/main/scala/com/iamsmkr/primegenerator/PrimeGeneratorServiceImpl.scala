@@ -7,8 +7,9 @@ import akka.stream.scaladsl.Source
 import com.iamsmkr.primegenerator.grpc._
 
 class PrimeGeneratorServiceImpl(log: LoggingAdapter) extends PrimeGeneratorService {
+
   override def getPrimeNumbers(req: GetPrimeNumbersRequest): Source[GetPrimeNumbersReply, NotUsed] = {
-    log.info("Received getPrimeNumbers request {}", req)
+    log.info("Received getPrimeNumbers request {} at prime number generator", req)
 
     def sieve(s: Stream[Int]): Stream[Int] = s.head #:: sieve(s.tail.filter(_ % s.head != 0))
 
