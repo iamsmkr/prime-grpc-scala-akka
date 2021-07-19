@@ -13,6 +13,11 @@ $ sbt prime-generator/docker:publishLocal
 $ sbt prime-proxy/docker:publishLocal
 ```
 
+**Note**: Make sure to point local docker daemon to minikube internal docker registry to make the docker images available inside minikube cluster. Use following command.
+```sh
+$ eval $(minikube -p minikube docker-env)
+```
+
 ## Deploy
 ```sh
 $ kubectl apply -f deploy/k8s/prime-generator.yml
