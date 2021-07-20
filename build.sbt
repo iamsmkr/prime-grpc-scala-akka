@@ -53,7 +53,8 @@ lazy val `prime-proxy` = (project in file("prime-proxy"))
       akkaHttp2Support,
       akkaDiscoveryKubernetes,
       logback,
-      protobufSource
+      protobufSource,
+      akkaHttpCors
     ),
     dockerExposedPorts := Seq(8080),
   )

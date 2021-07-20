@@ -5,6 +5,7 @@ object Dependencies {
   private lazy val akkaVersion = "2.6.14"
   private lazy val discoveryVersion = "1.0.9"
   private lazy val akkaHttpVersion = "10.2.3"
+  private lazy val akkaHttpCorsVersion = "1.1.1"
   private lazy val logbackVersion = "1.2.3"
   private lazy val protobufSourceVersion = "0.1"
 
@@ -20,6 +21,7 @@ object Dependencies {
   lazy val akkaHttp = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
   lazy val akkahttpSprayJson = "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion
   lazy val akkaHttp2Support = "com.typesafe.akka" %% "akka-http2-support" % akkaHttpVersion
+  lazy val akkaHttpCors = "ch.megard" %% "akka-http-cors" % akkaHttpCorsVersion
 
   lazy val akkaDiscoveryKubernetes = "com.lightbend.akka.discovery" %% "akka-discovery-kubernetes-api" % discoveryVersion
 
