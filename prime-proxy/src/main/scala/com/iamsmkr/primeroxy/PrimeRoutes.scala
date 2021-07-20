@@ -16,6 +16,10 @@ import akka.http.scaladsl.server.Route
 import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success}
 
+import akka.http.scaladsl.common.{CsvEntityStreamingSupport, EntityStreamingSupport}
+import akka.http.scaladsl.marshalling.{Marshaller, Marshalling}
+import akka.util.ByteString
+
 class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(implicit mat: Materializer, ec: ExecutionContext) {
 
   import PrimeRoutes._
@@ -60,6 +64,23 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
           }
         }
 
+      }
+    } ~ path("prime" / LongNumber / "csv-stream") { number =>
+      get {
+        log.info(s"prime numbers up until number $number are requested as csv stream")
+
+        implicit val csvFormat = Marshaller.strict[GetPrimeNumbersReply, ByteString] { res =>
+          Marshalling.WithFixedContentType(ContentTypes.`text/csv(UTF-8)`, () => {
+            ByteString(List(res.primeNumber).mkString(","))
+          })
+        }
+
+        implicit val streamingSupport: CsvEntityStreamingSupport = EntityStreamingSupport.csv()
+
+        val res = validateNumber(number)
+
+        if (res.isDefined) complete(BadRequest, res.get.msg)
+        else complete(client.getPrimeNumbers(GetPrimeNumbersRequest(number)))
       }
     }
 }
