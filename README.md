@@ -40,7 +40,7 @@ $ kubectl apply -f deploy/k8s/prime-proxy.yml
 #### Comma-Separated List
 The following API returns a string of comma-separated list of prime numbers up until a given number.
 ```sh
-$ curl --header 'Host: primeservice.com' $(minikube ip)/prime/23
+$ curl $(minikube ip)/prime/23
 ```
 
 **Note**: There is a hard-limit of `10000` prime numbers is set to avoid OOM.
@@ -50,7 +50,7 @@ $ curl --header 'Host: primeservice.com' $(minikube ip)/prime/23
 #### SeverSentEvents
 An alternative API returns prime numbers as SSE events. There is no hard limit set for this API.
 ```sh
-$ curl --header 'Host: primeservice.com' $(minikube ip)/prime/23/sse
+$ curl $(minikube ip)/prime/23/sse
 ```
 
 </br>
@@ -58,5 +58,5 @@ $ curl --header 'Host: primeservice.com' $(minikube ip)/prime/23/sse
 #### Comma-Separated Stream
 The following API returns a stream of comma-separated prime numbers up until a given number.
 ```sh
-$ curl --header 'Host: primeservice.com' $(minikube ip)/prime/23/csv-stream
+$ curl $(minikube ip)/prime/23/csv-stream
 ```
