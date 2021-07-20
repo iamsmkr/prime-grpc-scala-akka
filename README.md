@@ -8,6 +8,11 @@
   $ ./deploy/scripts/setup-minikube-for-linux.sh
   ```
 
+## Test
+```
+$ sbt test
+```
+
 ## Build
 #### Publish Protobuf Sources
 Protobuf files are maintained in a separate sbt project to avoid maintaining them in both client and server.
