@@ -12,7 +12,7 @@ import org.scalatest.wordspec.AnyWordSpecLike
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext}
 
-class PrimeGeneratorServiceSpec extends TestKit(ActorSystem("PrimeGeneratorServerTest")) with AnyWordSpecLike
+class PrimeGeneratorServiceSpec extends TestKit(ActorSystem("PrimeGeneratorServiceTest")) with AnyWordSpecLike
   with should.Matchers with ScalaCheckPropertyChecks with BeforeAndAfterAll {
 
   override def afterAll(): Unit = TestKit.shutdownActorSystem(system)

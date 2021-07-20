@@ -11,9 +11,7 @@ class PrimeGeneratorServiceImpl(log: LoggingAdapter) extends PrimeGeneratorServi
   override def getPrimeNumbers(req: GetPrimeNumbersRequest): Source[GetPrimeNumbersReply, NotUsed] = {
     log.info("Received getPrimeNumbers request {} at prime number generator", req)
 
-    def sieve(s: Stream[Int]): Stream[Int] = s.head #:: sieve(s.tail.filter(_ % s.head != 0))
-
-    Source(sieve(Stream.from(2)))
+    Source(PrimeGenerator.getPrimeNumbers)
       .takeWhile(_ <= req.number)
       .map(n => GetPrimeNumbersReply(n))
   }
