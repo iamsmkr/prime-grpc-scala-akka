@@ -19,7 +19,7 @@ class PrimeGeneratorServer(sys: ActorSystem[_]) {
 
     val log: Logger = system.log
 
-    val service: HttpRequest => Future[HttpResponse] = PrimeGeneratorServiceHandler(PrimeGeneratorServiceImpl(system.log))
+    val service: HttpRequest => Future[HttpResponse] = PrimeGeneratorServiceHandler(PrimeGeneratorServiceImpl(log))
 
     val config = ServerConfig("generator.server")
 
