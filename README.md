@@ -4,9 +4,9 @@
 1. Install sbt
 2. Install docker
 3. Install minikube/kubectl
-```sh
-$ ./deploy/scripts/setup-minikube-for-linux.sh
-```
+  ```sh
+  $ ./deploy/scripts/setup-minikube-for-linux.sh
+  ```
 
 ## Build
 #### Publish Protobuf Sources
@@ -43,7 +43,7 @@ The following API returns a string of comma-separated list of prime numbers up u
 $ curl --header 'Host: primeservice.com' $(minikube ip)/prime/23
 ```
 
-**Note**: There is a hard-limit of `10000` prime numbers is set to avoid stackoverflow.
+**Note**: There is a hard-limit of `10000` prime numbers is set to avoid OOM.
 
 </br>
 
