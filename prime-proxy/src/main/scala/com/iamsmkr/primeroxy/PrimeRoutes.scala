@@ -29,6 +29,7 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
   val routes: Route =
     cors(corsSettings) {
       withRequestTimeout(TIMEOUT_DURATION) {
+        
         path("prime" / LongNumber) { number =>
           val startByteString = ByteString("$start$")
 
