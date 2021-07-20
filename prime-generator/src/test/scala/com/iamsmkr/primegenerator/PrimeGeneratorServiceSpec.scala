@@ -1,6 +1,7 @@
 package com.iamsmkr.primegenerator
 
 import akka.actor.ActorSystem
+import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.grpc.GrpcServiceException
 import akka.stream.scaladsl.Sink
 import org.scalatest.matchers.should
@@ -16,9 +17,13 @@ import scala.concurrent.{Await, ExecutionContext}
 class PrimeGeneratorServiceSpec extends TestKit(ActorSystem("PrimeGeneratorServiceTest")) with AnyWordSpecLike
   with should.Matchers with ScalaCheckPropertyChecks with BeforeAndAfterAll {
 
-  override def afterAll(): Unit = TestKit.shutdownActorSystem(system)
+  val testKit: ActorTestKit = ActorTestKit()
 
-  implicit val ec: ExecutionContext = system.dispatcher
+  val sys = testKit.system
+
+  override def afterAll(): Unit = testKit.shutdownTestKit()
+
+  implicit val ec: ExecutionContext = sys.executionContext
 
   "PrimeGeneratorService" when {
     "given a number" should {
@@ -31,7 +36,7 @@ class PrimeGeneratorServiceSpec extends TestKit(ActorSystem("PrimeGeneratorServi
 
         forAll(results) { (number, result) =>
           Await.result(
-            PrimeGeneratorServiceImpl(system.log)
+            PrimeGeneratorServiceImpl(sys.log)
               .getPrimeNumbers(GetPrimeNumbersRequest(number))
               .map(_.primeNumber)
               .runWith(Sink.seq)
@@ -46,7 +51,7 @@ class PrimeGeneratorServiceSpec extends TestKit(ActorSystem("PrimeGeneratorServi
       "fail with an exception" in {
         assertThrows[GrpcServiceException] {
           Await.result(
-            PrimeGeneratorServiceImpl(system.log).getPrimeNumbers(GetPrimeNumbersRequest(0)).runWith(Sink.ignore),
+            PrimeGeneratorServiceImpl(sys.log).getPrimeNumbers(GetPrimeNumbersRequest(0)).runWith(Sink.ignore),
             5.seconds
           )
         }
