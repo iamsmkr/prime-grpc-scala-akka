@@ -29,6 +29,7 @@ lazy val `prime-generator` = (project in file("prime-generator"))
       logback,
       scalaTest,
       scalaCheck,
+      actorTestKitTyped,
       akkaTestKit,
       protobufSource
     )
@@ -49,6 +50,12 @@ lazy val `prime-proxy` = (project in file("prime-proxy"))
       akkaHttp,
       akkahttpSprayJson,
       akkaHttp2Support,
+      scalaTest,
+      scalaMock,
+      akkaTestKit,
+      akkaHttpTestkit,
+      akkaStreamTestkit,
+      actorTestKitTyped,
       akkaDiscoveryKubernetes,
       logback,
       protobufSource,
