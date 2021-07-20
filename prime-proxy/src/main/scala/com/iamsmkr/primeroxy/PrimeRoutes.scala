@@ -21,8 +21,9 @@ import akka.util.ByteString
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import com.iamsmkr.primecommon._
+import org.slf4j.Logger
 
-class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(implicit mat: Materializer, ec: ExecutionContext) {
+class PrimeRoutes(log: Logger, client: PrimeGeneratorServiceClient)(implicit mat: Materializer, ec: ExecutionContext) {
 
   import PrimeRoutes._
 
@@ -87,7 +88,7 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
               onComplete(f) {
                 case Success(reply) => complete(reply)
                 case Failure(t) =>
-                  log.error(t, "Request failed")
+                  log.error("Request failed", t)
                   complete(StatusCodes.InternalServerError, t.getMessage)
               }
             }
@@ -123,7 +124,7 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
 }
 
 object PrimeRoutes {
-  def apply(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(implicit mat: Materializer, ec: ExecutionContext): PrimeRoutes =
+  def apply(log: Logger, client: PrimeGeneratorServiceClient)(implicit mat: Materializer, ec: ExecutionContext): PrimeRoutes =
     new PrimeRoutes(log, client)(mat, ec)
 
   private val MAX_ALLOWED_SIZE = 10000
