@@ -15,10 +15,10 @@ import akka.http.scaladsl.server.Route
 
 import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success}
-
 import akka.http.scaladsl.common.{CsvEntityStreamingSupport, EntityStreamingSupport}
 import akka.http.scaladsl.marshalling.{Marshaller, Marshalling}
 import akka.util.ByteString
+import com.iamsmkr.primecommon._
 
 class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(implicit mat: Materializer, ec: ExecutionContext) {
 
@@ -90,9 +90,4 @@ object PrimeRoutes {
     new PrimeRoutes(log, client)(mat, ec)
 
   private val MAX_ALLOWED_SIZE = 10000
-
-  case class InvalidNumberArg(msg: String)
-
-  def validateNumberArg(number: Long): Option[InvalidNumberArg] =
-    if (number < 2) Some(InvalidNumberArg("Please provide a number greater 1")) else None
 }
