@@ -49,8 +49,7 @@ metadata:
   name: prime-proxy-srvc
 spec:
   rules:
-    - host: "primeservice.com"
-      http:
+    - http:
         paths:
           - backend:
               serviceName: prime-proxy-srvc
