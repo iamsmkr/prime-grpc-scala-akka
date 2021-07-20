@@ -22,8 +22,6 @@ object PrimeGeneratorServer {
 
     val config = ServerConfig("generator.server")
 
-    log.info(s"interface = ${config.interface}, port = ${config.port}")
-
     Http().newServerAt(config.interface, config.port)
       .bind(service)
       .onComplete {
