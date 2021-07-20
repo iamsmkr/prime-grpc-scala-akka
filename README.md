@@ -52,3 +52,9 @@ An alternative API returns prime numbers as SSE events. There is no hard limit s
 ```sh
 $ curl --header 'Host: primeservice.com' $(minikube ip)/prime/23/sse
 ```
+
+#### Comma-Separated Stream
+The following API returns a stream of comma-separated prime numbers up until a given number.
+```sh
+$ curl --header 'Host: primeservice.com' $(minikube ip)/prime/23/csv-stream
+```
