@@ -50,6 +50,7 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
               .map(i => ByteString(i.toString)).prepend(Source.single(startByteString))
               .map(bs => HttpEntity(ContentTypes.`text/plain(UTF-8)`, bs))
           }
+
         } ~ path("prime" / LongNumber / "csv-stream") { number =>
           get {
             log.info(s"prime numbers up until number $number are requested as csv stream")
@@ -67,6 +68,7 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
             if (res.isDefined) complete(BadRequest, res.get.msg)
             else complete(client.getPrimeNumbers(GetPrimeNumbersRequest(number)))
           }
+
         } ~ path("prime" / LongNumber / "seq") { number =>
           get {
             log.info(s"prime numbers up until number $number are requested")
@@ -90,6 +92,7 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
             }
 
           }
+
         } ~ path("prime" / LongNumber / "sse") { number =>
           get {
             log.info(s"prime numbers up until number $number are requested as sse")
@@ -107,8 +110,10 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
             }
 
           }
+
         } ~ path("prime" / Remaining) { _ =>
           complete(BadRequest, "Please provide a number greater than 1")
+
         } ~ path(Remaining) { _ =>
           complete(NotFound, "Prime numbers can be streamed @/prime/:number")
         }
