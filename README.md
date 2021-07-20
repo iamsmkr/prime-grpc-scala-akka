@@ -21,7 +21,7 @@ $ sbt test
 $ sbt it:test
 ```
 
-**Note**: While running end to end integration tests make sure to export minikube ip address as `export PRIME_PROXY_INTERFACE=$(minikube ip)` as shown below.
+**Note**: While running end to end integration tests make sure to export minikube ip address as environment variable `PRIME_PROXY_INTERFACE` as shown below.
 ```
 $ export PRIME_PROXY_INTERFACE=$(minikube ip)
 ```
