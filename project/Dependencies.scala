@@ -36,7 +36,7 @@ object Dependencies {
 
   lazy val typesafeConfig = "com.typesafe" % "config" % typeSafeConfigVersion
 
-  lazy val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion % Test
+  lazy val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test"
   lazy val scalaCheck = "org.scalatestplus" %% "scalacheck-1-15" % scalaCheckVersion % Test
   lazy val scalaMock = "org.scalamock" %% "scalamock" % scalaMockVersion % Test
 
