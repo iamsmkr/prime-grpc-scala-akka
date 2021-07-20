@@ -107,6 +107,10 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
             }
 
           }
+        } ~ path("prime" / Remaining) { _ =>
+          complete(BadRequest, "Please provide a number greater than 1")
+        } ~ path(Remaining) { _ =>
+          complete(NotFound, "Prime numbers can be streamed @/prime/:number")
         }
       }
     }
