@@ -20,8 +20,6 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
 
   import PrimeRoutes._
 
-  private val MAX_ALLOWED_SIZE = 10000
-
   val routes: Route =
     path("prime" / LongNumber) { number =>
       get {
@@ -70,10 +68,10 @@ object PrimeRoutes {
   def apply(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(implicit mat: Materializer, ec: ExecutionContext): PrimeRoutes =
     new PrimeRoutes(log, client)(mat, ec)
 
+  private val MAX_ALLOWED_SIZE = 10000
+
   case class InvalidNumber(msg: String)
 
-  def validateNumber(number: Long): Option[InvalidNumber] = {
-    if (number < 2) Some(InvalidNumber("Please provide a number greater 1"))
-    else None
-  }
+  def validateNumber(number: Long): Option[InvalidNumber] =
+    if (number < 2) Some(InvalidNumber("Please provide a number greater 1")) else None
 }
