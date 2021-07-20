@@ -9,8 +9,21 @@
   ```
 
 ## Test
+#### 1. Unit Tests
 ```
 $ sbt test
+```
+
+<br/>
+
+#### 2. Integration Tests
+```
+$ sbt it:test
+```
+
+**Note**: While running end to end integration tests make sure to export minikube ip address as `export PRIME_PROXY_INTERFACE=$(minikube ip)` as shown below.
+```
+$ export PRIME_PROXY_INTERFACE=$(minikube ip)
 ```
 
 ## Build
