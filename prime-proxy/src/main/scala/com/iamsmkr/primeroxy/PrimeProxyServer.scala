@@ -5,6 +5,8 @@ import akka.actor.ActorSystem
 import akka.event.LoggingAdapter
 import akka.grpc.GrpcClientSettings
 import akka.http.scaladsl.Http
+import com.iamsmkr.primecommon.ServerConfig
+
 import scala.concurrent._
 import scala.util.{Failure, Success}
 
@@ -21,7 +23,9 @@ object PrimeProxyServer {
 
     val primeRoutes = PrimeRoutes(log, client).routes
 
-    Http().newServerAt("0.0.0.0", 8080)
+    val config = ServerConfig("proxy.server")
+
+    Http().newServerAt(config.interface, config.port)
       .bindFlow(primeRoutes)
       .onComplete {
         case Success(r) => log.info("Bound: {}", r.localAddress)

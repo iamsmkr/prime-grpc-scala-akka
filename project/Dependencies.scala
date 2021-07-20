@@ -7,6 +7,7 @@ object Dependencies {
   private lazy val akkaHttpVersion = "10.2.3"
   private lazy val akkaHttpCorsVersion = "1.1.1"
   private lazy val logbackVersion = "1.2.3"
+  private lazy val typeSafeConfigVersion = "1.3.1"
   private lazy val protobufSourceVersion = "0.1"
 
   lazy val akka = "com.typesafe.akka" %% "akka-actor" % akkaVersion
@@ -26,6 +27,8 @@ object Dependencies {
   lazy val akkaDiscoveryKubernetes = "com.lightbend.akka.discovery" %% "akka-discovery-kubernetes-api" % discoveryVersion
 
   lazy val logback = "ch.qos.logback" % "logback-classic" % logbackVersion
+
+  lazy val typesafeConfig = "com.typesafe" % "config" % typeSafeConfigVersion
 
   lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.2.9" % Test
   lazy val scalaCheck = "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0" % Test

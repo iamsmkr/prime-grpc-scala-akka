@@ -4,20 +4,18 @@ name := "prime-grpc-scala-akka"
 
 ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / organization := "com.iamsmkr"
+ThisBuild / scalaVersion := "2.12.14"
 
 lazy val root = (project in file("."))
-  .aggregate(`prime-common`, `prime-proxy`, `prime-generator`)
+  .aggregate(`prime-proxy`, `prime-generator`, `prime-common`)
 
 lazy val `prime-common` = (project in file("prime-common"))
-  .enablePlugins(JavaAppPackaging)
   .settings(
-    scalaVersion := "2.12.14",
-    crossPaths := false
+    libraryDependencies += typesafeConfig
   )
 
 lazy val `prime-generator` = (project in file("prime-generator"))
   .enablePlugins(AkkaGrpcPlugin, DockerPlugin, JavaAppPackaging)
-  .settings(scalaVersion := "2.12.14")
   .settings(
     dockerExposedPorts := Seq(8080),
     libraryDependencies ++= Seq(
@@ -39,8 +37,8 @@ lazy val `prime-generator` = (project in file("prime-generator"))
 
 lazy val `prime-proxy` = (project in file("prime-proxy"))
   .enablePlugins(AkkaGrpcPlugin, DockerPlugin, JavaAppPackaging)
-  .settings(scalaVersion := "2.13.3")
   .settings(
+    dockerExposedPorts := Seq(8080),
     libraryDependencies ++= Seq(
       akkaTyped,
       akkaSlf4j,
@@ -55,7 +53,6 @@ lazy val `prime-proxy` = (project in file("prime-proxy"))
       logback,
       protobufSource,
       akkaHttpCors
-    ),
-    dockerExposedPorts := Seq(8080),
+    )
   )
   .dependsOn(`prime-common`)

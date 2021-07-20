@@ -4,6 +4,7 @@ import akka.actor.ActorSystem
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.model._
 import akka.http.scaladsl._
+import com.iamsmkr.primecommon.ServerConfig
 import com.iamsmkr.primegenerator.grpc._
 
 import scala.concurrent._
@@ -19,7 +20,11 @@ object PrimeGeneratorServer {
 
     val service: HttpRequest => Future[HttpResponse] = PrimeGeneratorServiceHandler(PrimeGeneratorServiceImpl(system.log))
 
-    Http().newServerAt("0.0.0.0", 8080)
+    val config = ServerConfig("generator.server")
+
+    log.info(s"interface = ${config.interface}, port = ${config.port}")
+
+    Http().newServerAt(config.interface, config.port)
       .bind(service)
       .onComplete {
         case Success(r) => log.info("Bound: {}", r.localAddress)
