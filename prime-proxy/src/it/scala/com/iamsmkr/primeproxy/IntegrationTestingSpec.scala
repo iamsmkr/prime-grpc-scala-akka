@@ -66,6 +66,6 @@ object IntegrationTestingSpec {
       ur <- Unmarshal(r).to[String]
     } yield ur
 
-    Await.result(f, 15.seconds)
+    Await.result(f, 5.seconds)
   }
 }
