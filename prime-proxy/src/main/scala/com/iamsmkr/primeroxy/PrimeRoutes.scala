@@ -25,11 +25,12 @@ import org.slf4j.Logger
 class PrimeRoutes(log: Logger, client: PrimeGeneratorService)(implicit mat: Materializer, ec: ExecutionContext) {
 
   import PrimeRoutes._
+  import PrimeRoutes.Responses._
 
   val routes: Route =
     cors(corsSettings) {
       withRequestTimeout(TIMEOUT_DURATION) {
-        
+
         path("prime" / LongNumber) { number =>
           val startByteString = ByteString("$start$")
 
@@ -45,11 +46,16 @@ class PrimeRoutes(log: Logger, client: PrimeGeneratorService)(implicit mat: Mate
                   }
               )
 
-          complete {
-            client.getPrimeNumbers(GetPrimeNumbersRequest(number))
-              .map(_.primeNumber)
-              .map(i => ByteString(i.toString)).prepend(Source.single(startByteString))
-              .map(bs => HttpEntity(ContentTypes.`text/plain(UTF-8)`, bs))
+          val res = validateNumberArg(number)
+
+          if (res.isDefined) complete(BadRequest, res.get.msg)
+          else {
+            complete {
+              client.getPrimeNumbers(GetPrimeNumbersRequest(number))
+                .map(_.primeNumber)
+                .map(i => ByteString(i.toString)).prepend(Source.single(startByteString))
+                .map(bs => HttpEntity(ContentTypes.`text/plain(UTF-8)`, bs))
+            }
           }
 
         } ~ path("prime" / LongNumber / "csv-stream") { number =>
@@ -113,10 +119,10 @@ class PrimeRoutes(log: Logger, client: PrimeGeneratorService)(implicit mat: Mate
           }
 
         } ~ path("prime" / Remaining) { _ =>
-          complete(BadRequest, "Please provide a number greater than 1")
+          complete(BadRequest, INVALID_NUMBER_ARGUMENT)
 
         } ~ path(Remaining) { _ =>
-          complete(NotFound, "Prime numbers can be streamed @/prime/:number")
+          complete(NotFound, RESOURCE_NOT_FOUND)
         }
       }
     }
@@ -131,4 +137,10 @@ object PrimeRoutes {
   private val TIMEOUT_DURATION = 60.minutes
 
   private lazy val corsSettings = CorsSettings.defaultSettings.withAllowedMethods(List(HttpMethods.GET))
+
+  object Responses {
+    lazy val INVALID_NUMBER_ARGUMENT = "Please provide a number greater than 1"
+    lazy val RESOURCE_NOT_FOUND = "Prime numbers can be streamed @/prime/:number"
+  }
+
 }
