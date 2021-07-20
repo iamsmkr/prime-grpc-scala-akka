@@ -1,7 +1,6 @@
 package com.iamsmkr.primeroxy
 
 import com.iamsmkr.primegenerator.grpc._
-import akka.event.LoggingAdapter
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.stream._
@@ -23,7 +22,7 @@ import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import com.iamsmkr.primecommon._
 import org.slf4j.Logger
 
-class PrimeRoutes(log: Logger, client: PrimeGeneratorServiceClient)(implicit mat: Materializer, ec: ExecutionContext) {
+class PrimeRoutes(log: Logger, client: PrimeGeneratorService)(implicit mat: Materializer, ec: ExecutionContext) {
 
   import PrimeRoutes._
 
@@ -124,7 +123,7 @@ class PrimeRoutes(log: Logger, client: PrimeGeneratorServiceClient)(implicit mat
 }
 
 object PrimeRoutes {
-  def apply(log: Logger, client: PrimeGeneratorServiceClient)(implicit mat: Materializer, ec: ExecutionContext): PrimeRoutes =
+  def apply(log: Logger, client: PrimeGeneratorService)(implicit mat: Materializer, ec: ExecutionContext): PrimeRoutes =
     new PrimeRoutes(log, client)(mat, ec)
 
   private val MAX_ALLOWED_SIZE = 10000
