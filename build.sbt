@@ -1,13 +1,13 @@
 import Dependencies._
 
 name := "prime-grpc-scala-akka"
-scalaVersion := "2.13.3"
 
 lazy val root = (project in file("."))
   .aggregate(`prime-proxy`, `prime-generator`)
 
 lazy val `prime-generator` = (project in file("prime-generator"))
   .enablePlugins(AkkaGrpcPlugin, DockerPlugin, JavaAppPackaging)
+  .settings(scalaVersion := "2.12.14")
   .settings(
     dockerExposedPorts := Seq(8080),
     libraryDependencies ++= Seq(
@@ -21,12 +21,14 @@ lazy val `prime-generator` = (project in file("prime-generator"))
       logback,
       scalaTest,
       scalaCheck,
-      akkaTestKit
+      akkaTestKit,
+      protobufSource
     )
   )
 
 lazy val `prime-proxy` = (project in file("prime-proxy"))
   .enablePlugins(AkkaGrpcPlugin, DockerPlugin, JavaAppPackaging)
+  .settings(scalaVersion := "2.13.3")
   .settings(
     libraryDependencies ++= Seq(
       akkaTyped,
@@ -39,7 +41,8 @@ lazy val `prime-proxy` = (project in file("prime-proxy"))
       akkahttpSprayJson,
       akkaHttp2Support,
       akkaDiscoveryKubernetes,
-      logback
+      logback,
+      protobufSource
     ),
     dockerExposedPorts := Seq(8080),
   )
