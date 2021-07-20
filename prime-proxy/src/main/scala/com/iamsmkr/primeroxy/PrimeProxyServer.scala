@@ -42,7 +42,7 @@ class PrimeProxyServer(sys: ActorSystem[_]) {
 object PrimeProxyServer {
 
   def main(args: Array[String]): Unit = {
-    implicit val system = ActorSystem[Nothing](Behaviors.ignore, "PrimeProxyService")
+    implicit val system: ActorSystem[_] = ActorSystem(Behaviors.empty, "PrimeProxyService")
     new PrimeProxyServer(system).run()
   }
 }

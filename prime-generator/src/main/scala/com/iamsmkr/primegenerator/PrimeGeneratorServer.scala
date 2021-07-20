@@ -38,7 +38,7 @@ class PrimeGeneratorServer(sys: ActorSystem[_]) {
 object PrimeGeneratorServer {
 
   def main(args: Array[String]): Unit = {
-    implicit val system = ActorSystem[Nothing](Behaviors.ignore, "PrimeGeneratorServer")
+    implicit val system: ActorSystem[_] = ActorSystem(Behaviors.empty, "PrimeGeneratorServer")
     new PrimeGeneratorServer(system).run()
   }
 }
