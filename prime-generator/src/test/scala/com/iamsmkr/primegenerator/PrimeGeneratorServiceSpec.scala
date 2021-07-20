@@ -1,6 +1,7 @@
 package com.iamsmkr.primegenerator
 
 import akka.actor.ActorSystem
+import akka.grpc.GrpcServiceException
 import akka.stream.scaladsl.Sink
 import org.scalatest.matchers.should
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -25,8 +26,7 @@ class PrimeGeneratorServiceSpec extends TestKit(ActorSystem("PrimeGeneratorServi
         val results =
           Table(
             ("number", "result"),
-            (23, "2,3,5,7,11,13,17,19,23"),
-            (1, "")
+            (23, "2,3,5,7,11,13,17,19,23")
           )
 
         forAll(results) { (number, result) =>
@@ -39,6 +39,18 @@ class PrimeGeneratorServiceSpec extends TestKit(ActorSystem("PrimeGeneratorServi
             5.seconds
           ) should be(result)
         }
+      }
+    }
+
+    "given a number less than 2" should {
+      "fail with an exception" in {
+        assertThrows[GrpcServiceException] {
+          Await.result(
+            PrimeGeneratorServiceImpl(system.log).getPrimeNumbers(GetPrimeNumbersRequest(0)).runWith(Sink.ignore),
+            5.seconds
+          )
+        }
+
       }
     }
   }
