@@ -26,6 +26,44 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
 
   val routes: Route =
     path("prime" / LongNumber) { number =>
+      val startByteString = ByteString("$start$")
+
+      implicit val streamingSupport: CsvEntityStreamingSupport =
+        EntityStreamingSupport.csv(maxLineLength = 16 * 1024)
+          .withSupported(ContentTypeRange(ContentTypes.`text/plain(UTF-8)`))
+          .withContentType(ContentTypes.`text/plain(UTF-8)`)
+          .withFramingRenderer(
+            Flow[ByteString].sliding(2, 1)
+              .map { bsSeq =>
+                if ( startByteString.equals(bsSeq.head)) bsSeq(1)
+                else ByteString(",") ++ bsSeq(1)
+              }
+          )
+
+      complete {
+        client.getPrimeNumbers(GetPrimeNumbersRequest(number))
+          .map(_.primeNumber)
+          .map(i => ByteString(i.toString)).prepend(Source.single(startByteString))
+          .map(bs => HttpEntity(ContentTypes.`text/plain(UTF-8)`, bs))
+      }
+    } ~ path("prime" / LongNumber / "csv-stream") { number =>
+      get {
+        log.info(s"prime numbers up until number $number are requested as csv stream")
+
+        implicit val csvFormat = Marshaller.strict[GetPrimeNumbersReply, ByteString] { res =>
+          Marshalling.WithFixedContentType(ContentTypes.`text/csv(UTF-8)`, () => {
+            ByteString(List(res.primeNumber).mkString(","))
+          })
+        }
+
+        implicit val streamingSupport: CsvEntityStreamingSupport = EntityStreamingSupport.csv()
+
+        val res = validateNumberArg(number)
+
+        if (res.isDefined) complete(BadRequest, res.get.msg)
+        else complete(client.getPrimeNumbers(GetPrimeNumbersRequest(number)))
+      }
+    } ~ path("prime" / LongNumber / "seq") { number =>
       get {
         log.info(s"prime numbers up until number $number are requested")
 
@@ -64,23 +102,6 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
           }
         }
 
-      }
-    } ~ path("prime" / LongNumber / "csv-stream") { number =>
-      get {
-        log.info(s"prime numbers up until number $number are requested as csv stream")
-
-        implicit val csvFormat = Marshaller.strict[GetPrimeNumbersReply, ByteString] { res =>
-          Marshalling.WithFixedContentType(ContentTypes.`text/csv(UTF-8)`, () => {
-            ByteString(List(res.primeNumber).mkString(","))
-          })
-        }
-
-        implicit val streamingSupport: CsvEntityStreamingSupport = EntityStreamingSupport.csv()
-
-        val res = validateNumberArg(number)
-
-        if (res.isDefined) complete(BadRequest, res.get.msg)
-        else complete(client.getPrimeNumbers(GetPrimeNumbersRequest(number)))
       }
     }
 }
