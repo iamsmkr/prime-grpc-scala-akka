@@ -29,7 +29,7 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
       get {
         log.info(s"prime numbers up until number $number are requested")
 
-        val res = validateNumber(number)
+        val res = validateNumberArg(number)
 
         if (res.isDefined) complete(BadRequest, res.get.msg)
         else {
@@ -52,7 +52,7 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
       get {
         log.info(s"prime numbers up until number $number are requested as sse")
 
-        val res = validateNumber(number)
+        val res = validateNumberArg(number)
 
         if (res.isDefined) complete(BadRequest, res.get.msg)
         else {
@@ -77,7 +77,7 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
 
         implicit val streamingSupport: CsvEntityStreamingSupport = EntityStreamingSupport.csv()
 
-        val res = validateNumber(number)
+        val res = validateNumberArg(number)
 
         if (res.isDefined) complete(BadRequest, res.get.msg)
         else complete(client.getPrimeNumbers(GetPrimeNumbersRequest(number)))
@@ -91,8 +91,8 @@ object PrimeRoutes {
 
   private val MAX_ALLOWED_SIZE = 10000
 
-  case class InvalidNumber(msg: String)
+  case class InvalidNumberArg(msg: String)
 
-  def validateNumber(number: Long): Option[InvalidNumber] =
-    if (number < 2) Some(InvalidNumber("Please provide a number greater 1")) else None
+  def validateNumberArg(number: Long): Option[InvalidNumberArg] =
+    if (number < 2) Some(InvalidNumberArg("Please provide a number greater 1")) else None
 }
