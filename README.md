@@ -14,7 +14,7 @@ $ sbt test
 ```
 
 ## Build
-#### Publish Protobuf Sources
+#### 1. Publish Protobuf Sources
 Protobuf files are maintained in a separate sbt project to avoid maintaining them in both client and server.
 ```sh
 $ sbt prime-protobuf/+publishLocal
@@ -24,7 +24,7 @@ $ sbt prime-protobuf/+publishLocal
 
 </br>
 
-#### Publish Docker Images
+#### 2. Publish Docker Images
 ```sh
 $ sbt prime-generator/docker:publishLocal
 $ sbt prime-proxy/docker:publishLocal
@@ -42,7 +42,7 @@ $ kubectl apply -f deploy/k8s/prime-proxy.yml
 ```
 
 ## Usage
-#### Comma-Separated Stream
+#### 1. Comma-Separated Stream
 The following API returns a stream of comma-separated prime numbers up until a given number.
 ```sh
 $ curl $(minikube ip)/prime/23
@@ -52,7 +52,7 @@ $ curl $(minikube ip)/prime/23
 
 <br/>
 
-#### Comma-Separated Seq
+#### 2. Comma-Separated Seq
 The following API returns a string of comma-separated list of prime numbers up until a given number.
 ```sh
 $ curl $(minikube ip)/prime/23/seq
@@ -62,7 +62,7 @@ $ curl $(minikube ip)/prime/23/seq
 
 </br>
 
-#### Newline-Separated Stream 
+#### 3. Newline-Separated Stream 
 The following API returns a stream of prime numbers up until a given number separated by new line.
 ```sh
 $ curl $(minikube ip)/prime/23/csv-stream
@@ -72,7 +72,7 @@ $ curl $(minikube ip)/prime/23/csv-stream
 
 <br/>
 
-#### SeverSentEvents
+#### 4. SeverSentEvents
 An alternative API returns prime numbers as SSE events. There is no hard limit set for this API.
 ```sh
 $ curl $(minikube ip)/prime/23/sse
