@@ -17,7 +17,7 @@ import scala.concurrent.{Await, ExecutionContext}
 class PrimeGeneratorServiceSpec extends TestKit(ActorSystem("PrimeGeneratorServiceTest")) with AnyWordSpecLike
   with should.Matchers with ScalaCheckPropertyChecks with BeforeAndAfterAll {
 
-  val testKit: ActorTestKit = ActorTestKit()
+  val testKit = ActorTestKit()
 
   val sys = testKit.system
 
