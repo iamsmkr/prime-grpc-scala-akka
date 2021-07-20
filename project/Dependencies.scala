@@ -6,6 +6,7 @@ object Dependencies {
   private lazy val discoveryVersion = "1.0.9"
   private lazy val akkaHttpVersion = "10.2.3"
   private lazy val logbackVersion = "1.2.3"
+  private lazy val protobufSourceVersion = "0.1"
 
   lazy val akka = "com.typesafe.akka" %% "akka-actor" % akkaVersion
   lazy val akkaTyped = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
@@ -27,4 +28,5 @@ object Dependencies {
   lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.2.9" % Test
   lazy val scalaCheck = "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0" % Test
 
+  lazy val protobufSource = "com.iamsmkr" %% "prime-protobuf" % protobufSourceVersion % "protobuf-src"
 }
