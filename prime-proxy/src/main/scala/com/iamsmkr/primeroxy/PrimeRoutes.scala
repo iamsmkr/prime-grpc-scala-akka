@@ -28,83 +28,85 @@ class PrimeRoutes(log: LoggingAdapter, client: PrimeGeneratorServiceClient)(impl
 
   val routes: Route =
     cors(corsSettings) {
-      path("prime" / LongNumber) { number =>
-        val startByteString = ByteString("$start$")
+      withRequestTimeout(TIMEOUT_DURATION) {
+        path("prime" / LongNumber) { number =>
+          val startByteString = ByteString("$start$")
 
-        implicit val streamingSupport: CsvEntityStreamingSupport =
-          EntityStreamingSupport.csv(maxLineLength = 16 * 1024)
-            .withSupported(ContentTypeRange(ContentTypes.`text/plain(UTF-8)`))
-            .withContentType(ContentTypes.`text/plain(UTF-8)`)
-            .withFramingRenderer(
-              Flow[ByteString].sliding(2, 1)
-                .map { bsSeq =>
-                  if (startByteString.equals(bsSeq.head)) bsSeq(1)
-                  else ByteString(",") ++ bsSeq(1)
-                }
-            )
+          implicit val streamingSupport: CsvEntityStreamingSupport =
+            EntityStreamingSupport.csv(maxLineLength = 16 * 1024)
+              .withSupported(ContentTypeRange(ContentTypes.`text/plain(UTF-8)`))
+              .withContentType(ContentTypes.`text/plain(UTF-8)`)
+              .withFramingRenderer(
+                Flow[ByteString].sliding(2, 1)
+                  .map { bsSeq =>
+                    if (startByteString.equals(bsSeq.head)) bsSeq(1)
+                    else ByteString(",") ++ bsSeq(1)
+                  }
+              )
 
-        complete {
-          client.getPrimeNumbers(GetPrimeNumbersRequest(number))
-            .map(_.primeNumber)
-            .map(i => ByteString(i.toString)).prepend(Source.single(startByteString))
-            .map(bs => HttpEntity(ContentTypes.`text/plain(UTF-8)`, bs))
-        }
-      } ~ path("prime" / LongNumber / "csv-stream") { number =>
-        get {
-          log.info(s"prime numbers up until number $number are requested as csv stream")
-
-          implicit val csvFormat = Marshaller.strict[GetPrimeNumbersReply, ByteString] { res =>
-            Marshalling.WithFixedContentType(ContentTypes.`text/csv(UTF-8)`, () => {
-              ByteString(List(res.primeNumber).mkString(","))
-            })
-          }
-
-          implicit val streamingSupport: CsvEntityStreamingSupport = EntityStreamingSupport.csv()
-
-          val res = validateNumberArg(number)
-
-          if (res.isDefined) complete(BadRequest, res.get.msg)
-          else complete(client.getPrimeNumbers(GetPrimeNumbersRequest(number)))
-        }
-      } ~ path("prime" / LongNumber / "seq") { number =>
-        get {
-          log.info(s"prime numbers up until number $number are requested")
-
-          val res = validateNumberArg(number)
-
-          if (res.isDefined) complete(BadRequest, res.get.msg)
-          else {
-            val f = client.getPrimeNumbers(GetPrimeNumbersRequest(number))
+          complete {
+            client.getPrimeNumbers(GetPrimeNumbersRequest(number))
               .map(_.primeNumber)
-              .take(MAX_ALLOWED_SIZE)
-              .runWith(Sink.seq)
-              .map(_.mkString(","))
-
-            onComplete(f) {
-              case Success(reply) => complete(reply)
-              case Failure(t) =>
-                log.error(t, "Request failed")
-                complete(StatusCodes.InternalServerError, t.getMessage)
-            }
+              .map(i => ByteString(i.toString)).prepend(Source.single(startByteString))
+              .map(bs => HttpEntity(ContentTypes.`text/plain(UTF-8)`, bs))
           }
+        } ~ path("prime" / LongNumber / "csv-stream") { number =>
+          get {
+            log.info(s"prime numbers up until number $number are requested as csv stream")
 
-        }
-      } ~ path("prime" / LongNumber / "sse") { number =>
-        get {
-          log.info(s"prime numbers up until number $number are requested as sse")
+            implicit val csvFormat = Marshaller.strict[GetPrimeNumbersReply, ByteString] { res =>
+              Marshalling.WithFixedContentType(ContentTypes.`text/csv(UTF-8)`, () => {
+                ByteString(List(res.primeNumber).mkString(","))
+              })
+            }
 
-          val res = validateNumberArg(number)
+            implicit val streamingSupport: CsvEntityStreamingSupport = EntityStreamingSupport.csv()
 
-          if (res.isDefined) complete(BadRequest, res.get.msg)
-          else {
-            complete {
-              client.getPrimeNumbers(GetPrimeNumbersRequest(number))
+            val res = validateNumberArg(number)
+
+            if (res.isDefined) complete(BadRequest, res.get.msg)
+            else complete(client.getPrimeNumbers(GetPrimeNumbersRequest(number)))
+          }
+        } ~ path("prime" / LongNumber / "seq") { number =>
+          get {
+            log.info(s"prime numbers up until number $number are requested")
+
+            val res = validateNumberArg(number)
+
+            if (res.isDefined) complete(BadRequest, res.get.msg)
+            else {
+              val f = client.getPrimeNumbers(GetPrimeNumbersRequest(number))
                 .map(_.primeNumber)
-                .map(n => ServerSentEvent(n.toString))
-                .keepAlive(1.second, () => ServerSentEvent.heartbeat)
-            }
-          }
+                .take(MAX_ALLOWED_SIZE)
+                .runWith(Sink.seq)
+                .map(_.mkString(","))
 
+              onComplete(f) {
+                case Success(reply) => complete(reply)
+                case Failure(t) =>
+                  log.error(t, "Request failed")
+                  complete(StatusCodes.InternalServerError, t.getMessage)
+              }
+            }
+
+          }
+        } ~ path("prime" / LongNumber / "sse") { number =>
+          get {
+            log.info(s"prime numbers up until number $number are requested as sse")
+
+            val res = validateNumberArg(number)
+
+            if (res.isDefined) complete(BadRequest, res.get.msg)
+            else {
+              complete {
+                client.getPrimeNumbers(GetPrimeNumbersRequest(number))
+                  .map(_.primeNumber)
+                  .map(n => ServerSentEvent(n.toString))
+                  .keepAlive(1.second, () => ServerSentEvent.heartbeat)
+              }
+            }
+
+          }
         }
       }
     }
@@ -115,6 +117,8 @@ object PrimeRoutes {
     new PrimeRoutes(log, client)(mat, ec)
 
   private val MAX_ALLOWED_SIZE = 10000
+
+  private val TIMEOUT_DURATION = 60.minutes
 
   private lazy val corsSettings = CorsSettings.defaultSettings.withAllowedMethods(List(HttpMethods.GET))
 }
