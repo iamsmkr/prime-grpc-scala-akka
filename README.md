@@ -1,5 +1,7 @@
 # prime-grpc-scala-akka
 
+Head to [Wiki](https://github.com/iamsmkr/prime-grpc-scala-akka/wiki) for detailed design discussions.
+
 ## Install Dependencies
 1. Install SBT 
 
