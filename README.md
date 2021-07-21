@@ -1,23 +1,34 @@
 # prime-grpc-scala-akka
 
 ## Install Dependencies
-1. Install sbt
-2. Install docker
-3. Install minikube/kubectl
-  ```sh
-  $ ./deploy/scripts/setup-minikube-for-linux.sh
-  ```
+1. Install SBT 
+
+    On linux/windows based systems, you can use [SDKMAN](https://sdkman.io/) software development kit manager for convenient installation and usage of multiple versions.
+
+2. Install Docker
+
+    Follow docker installation guide [here](https://docs.docker.com/engine/install/).
+
+3. Install Minikube/Kubectl
+
+    Use following convenience script to install both minikube and kubectl.
+      ```sh
+      $ ./deploy/scripts/setup-minikube-for-linux.sh
+      ```
 
 ## Test
 #### 1. Unit Tests
-```
+```sh
+$ sbt prime-generator/test
+$ sbt prime-proxy/test
 $ sbt test
 ```
 
 <br/>
 
 #### 2. Integration Tests
-```
+The end-to-end integration tests are available under `prime-proxy/src/it`.
+```sh
 $ sbt it:test
 ```
 
@@ -55,6 +66,8 @@ $ kubectl apply -f deploy/k8s/prime-proxy.yml
 ```
 
 ## Usage
+The prime number generator service is available over following REST APIs.
+
 #### 1. Comma-Separated Stream
 The following API returns a stream of comma-separated prime numbers up until a given number.
 ```sh
