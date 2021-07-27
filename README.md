@@ -28,8 +28,6 @@ $ sbt +publishLocal
 
 **Note**: The project can be cross-compiled to multiple Scala versions. Should you choose to compile it into a Scala version of your choice, don't forget to update `build.sbt` with desired Scala version.
 
-</br>
-
 #### 2. Publish Docker Images
 ```sh
 $ sbt prime-generator/docker:publishLocal
@@ -48,8 +46,6 @@ $ sbt prime-generator/test
 $ sbt prime-proxy/test
 $ sbt test
 ```
-
-<br/>
 
 #### 2. Integration Tests
 The end-to-end integration tests are available under `prime-proxy/src/it`.
