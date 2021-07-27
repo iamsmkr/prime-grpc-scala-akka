@@ -16,7 +16,9 @@ lazy val `prime-common` = (project in file("prime-common"))
 
 lazy val `prime-generator` = (project in file("prime-generator"))
   .enablePlugins(AkkaGrpcPlugin, DockerPlugin, JavaAppPackaging)
+  .configs(IntegrationTest)
   .settings(
+    Defaults.itSettings,
     dockerExposedPorts := Seq(8080),
     libraryDependencies ++= Seq(
       akka,
