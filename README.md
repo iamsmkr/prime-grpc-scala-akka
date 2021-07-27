@@ -18,6 +18,29 @@ Head to [Wiki](https://github.com/iamsmkr/prime-grpc-scala-akka/wiki) for detail
       $ ./deploy/scripts/setup-minikube-for-linux.sh
       ```
 
+## Build
+#### 1. Publish Protobuf Sources
+Protobuf files are maintained in a separate sbt project to avoid maintaining them in both client and server.
+```sh
+$ cd prime-protobuf
+$ sbt +publishLocal
+```
+
+**Note**: The project can be cross-compiled to multiple Scala versions. Should you choose to compile it into a Scala version of your choice, don't forget to update `build.sbt` with desired Scala version.
+
+</br>
+
+#### 2. Publish Docker Images
+```sh
+$ sbt prime-generator/docker:publishLocal
+$ sbt prime-proxy/docker:publishLocal
+```
+
+**Note**: Make sure to point local docker daemon to minikube internal docker registry to make the docker images available inside minikube cluster. Use following command.
+```sh
+$ eval $(minikube -p minikube docker-env)
+```
+
 ## Test
 #### 1. Unit Tests
 ```sh
@@ -37,28 +60,6 @@ $ sbt it:test
 **Note**: While running end to end integration tests make sure to export minikube ip address as environment variable `PRIME_PROXY_INTERFACE` as shown below:
 ```
 $ export PRIME_PROXY_INTERFACE=$(minikube ip)
-```
-
-## Build
-#### 1. Publish Protobuf Sources
-Protobuf files are maintained in a separate sbt project to avoid maintaining them in both client and server.
-```sh
-$ sbt prime-protobuf/+publishLocal
-```
-
-**Note**: The project can be cross-compiled to multiple Scala versions. Should you choose to compile it into a Scala version of your choice, don't forget to update `build.sbt` with desired Scala version.
-
-</br>
-
-#### 2. Publish Docker Images
-```sh
-$ sbt prime-generator/docker:publishLocal
-$ sbt prime-proxy/docker:publishLocal
-```
-
-**Note**: Make sure to point local docker daemon to minikube internal docker registry to make the docker images available inside minikube cluster. Use following command.
-```sh
-$ eval $(minikube -p minikube docker-env)
 ```
 
 ## Deploy
