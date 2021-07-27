@@ -39,6 +39,12 @@ $ sbt prime-proxy/docker:publishLocal
 $ eval $(minikube -p minikube docker-env)
 ```
 
+## Deploy
+```sh
+$ kubectl apply -f deploy/k8s/prime-generator.yml
+$ kubectl apply -f deploy/k8s/prime-proxy.yml
+```
+
 ## Test
 #### 1. Unit Tests
 ```sh
@@ -56,12 +62,6 @@ $ sbt it:test
 **Note**: While running end to end integration tests make sure to export minikube ip address as environment variable `PRIME_PROXY_INTERFACE` as shown below:
 ```
 $ export PRIME_PROXY_INTERFACE=$(minikube ip)
-```
-
-## Deploy
-```sh
-$ kubectl apply -f deploy/k8s/prime-generator.yml
-$ kubectl apply -f deploy/k8s/prime-proxy.yml
 ```
 
 ## Usage
