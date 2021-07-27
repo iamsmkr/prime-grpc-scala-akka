@@ -1,6 +1,6 @@
 # prime-grpc-scala-akka
 
-Head to [Wiki](https://github.com/iamsmkr/prime-grpc-scala-akka/wiki) for detailed design discussions.
+Head to [Wiki](https://github.com/iamsmkr/prime-grpc-scala-akka/wiki) for detailed design docs.
 
 ## Install Dependencies
 1. Install SBT 
@@ -18,37 +18,15 @@ Head to [Wiki](https://github.com/iamsmkr/prime-grpc-scala-akka/wiki) for detail
       $ ./deploy/scripts/setup-minikube-for-linux.sh
       ```
 
-## Test
-#### 1. Unit Tests
-```sh
-$ sbt prime-generator/test
-$ sbt prime-proxy/test
-$ sbt test
-```
-
-<br/>
-
-#### 2. Integration Tests
-The end-to-end integration tests are available under `prime-proxy/src/it`.
-```sh
-$ sbt it:test
-```
-
-**Note**: While running end to end integration tests make sure to export minikube ip address as environment variable `PRIME_PROXY_INTERFACE` as shown below:
-```
-$ export PRIME_PROXY_INTERFACE=$(minikube ip)
-```
-
 ## Build
 #### 1. Publish Protobuf Sources
 Protobuf files are maintained in a separate sbt project to avoid maintaining them in both client and server.
 ```sh
-$ sbt prime-protobuf/+publishLocal
+$ cd prime-protobuf
+$ sbt +publishLocal
 ```
 
 **Note**: The project can be cross-compiled to multiple Scala versions. Should you choose to compile it into a Scala version of your choice, don't forget to update `build.sbt` with desired Scala version.
-
-</br>
 
 #### 2. Publish Docker Images
 ```sh
@@ -59,6 +37,25 @@ $ sbt prime-proxy/docker:publishLocal
 **Note**: Make sure to point local docker daemon to minikube internal docker registry to make the docker images available inside minikube cluster. Use following command.
 ```sh
 $ eval $(minikube -p minikube docker-env)
+```
+
+## Test
+#### 1. Unit Tests
+```sh
+$ sbt prime-generator/test
+$ sbt prime-proxy/test
+$ sbt test
+```
+
+#### 2. Integration Tests
+The end-to-end integration tests are available under `prime-proxy/src/it`.
+```sh
+$ sbt it:test
+```
+
+**Note**: While running end to end integration tests make sure to export minikube ip address as environment variable `PRIME_PROXY_INTERFACE` as shown below:
+```
+$ export PRIME_PROXY_INTERFACE=$(minikube ip)
 ```
 
 ## Deploy
